@@ -1,74 +1,83 @@
-package project;
-
-import static org.testng.Assert.assertEquals;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import io.appium.java_client.MobileBy;
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
-
 public class Activity3 {
-	WebDriverWait wait;
-
-	AndroidDriver<MobileElement> driver;
-
-	@Test
-	public void f() {
-		wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("new_note_button")));
-        driver.findElementById("new_note_button").click();
-//wait.until(ExpectedConditions.elementToBeSelected(MobileBy.id("editable_title")));
-driver.findElementById("editable_title").sendKeys("Test Title");
-driver.findElementById("edit_note_text").sendKeys("Sample Notes");
-
-driver.findElementById("menu_reminder").click();
-driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.ImageView").click();
-
-wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("save")));
-driver.findElementById("save").click();
-driver.findElementByAccessibilityId("Navigate up").click();
-driver.findElementByAccessibilityId("Open navigation drawer").click();
-driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.drawerlayout.widget.DrawerLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.ImageView").click();
-String S=driver.findElementById("index_note_title").getText();
-System.out.println(S);
-assertEquals(S,"Test Title");
-
-		
-	}
-
-	
-
-	
-
-
-	@BeforeClass
-	public void setUp() throws MalformedURLException {
-		DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-		desiredCapabilities.setCapability("deviceName", "Pixel4Emulator");
-		desiredCapabilities.setCapability("platformName", "android");
-		desiredCapabilities.setCapability("automationName", "UiAutomator2");
-		desiredCapabilities.setCapability("ensureWebviewsHavePages", true);
-		desiredCapabilities.setCapability("appPackage", "com.google.android.keep");
-		desiredCapabilities.setCapability("appActivity", ".activities.BrowseActivity");
-		desiredCapabilities.setCapability("noReset", true);
-
-		URL remoteUrl = new URL("http://localhost:4723/wd/hub");
-
-		driver = new AndroidDriver<MobileElement>(remoteUrl, desiredCapabilities);
-		wait = new WebDriverWait(driver, 10);
-	}
-
-	@AfterClass
-	public void tearDown() {
-		// close the application
-		driver.quit();
-	}
+    AppiumDriver<MobileElement> driver = null;
+ 
+    @BeforeClass
+    public void beforeClass() throws MalformedURLException {
+        // Set the Desired Capabilities
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability("deviceName", "<device name>");
+        caps.setCapability("platformName", "Android");
+        caps.setCapability("appPackage", "com.android.calculator2");
+        caps.setCapability("appActivity", ".Calculator");
+        caps.setCapability("noReset", true);
+ 
+        // Instantiate Appium Driver
+        URL appServer = new URL("http://0.0.0.0:4723/wd/hub");
+        driver = new AndroidDriver<MobileElement>(appServer, caps);
+    }
+ 
+    @Test
+    public void add() {
+        driver.findElementById("digit_5").click();
+        driver.findElementById("op_add").click();
+        driver.findElementById("digit_9").click();
+        // Perform Calculation
+        driver.findElementById("eq").click();
+ 
+        // Display Result
+        String result = driver.findElementById("result").getText();
+        System.out.println(result);
+        Assert.assertEquals(result, "14");
+    }
+    
+    @Test
+    public void subtract() {
+        driver.findElementById("digit_1").click();
+        driver.findElementById("digit_0").click();
+        driver.findElementById("op_sub").click();
+        driver.findElementById("digit_5").click();
+        // Perform Calculation
+        driver.findElementById("eq").click();
+ 
+        // Display Result
+        String result = driver.findElementById("result").getText();
+        System.out.println(result);
+        Assert.assertEquals(result, "5");
+    }
+ 
+    @Test
+    public void multiply() {
+        driver.findElementById("digit_5").click();
+        driver.findElementById("op_mul").click();
+        driver.findElementById("digit_1").click();
+        driver.findElementById("digit_0").click();
+        driver.findElementById("digit_0").click();
+        // Perform Calculation
+        driver.findElementById("eq").click();
+ 
+        // Display Result
+        String result = driver.findElementById("result").getText();
+        System.out.println(result);
+        Assert.assertEquals(result, "500");
+    }
+ 
+    @Test
+    public void divide() {
+        driver.findElementById("digit_5").click();
+        driver.findElementById("digit_0").click();
+        driver.findElementById("op_div").click();
+        driver.findElementById("digit_2").click();
+        // Perform Calculation
+        driver.findElementById("eq").click();
+ 
+        // Display Result
+        String result = driver.findElementById("result").getText();
+        System.out.println(result);
+        Assert.assertEquals(result, "25");
+    }
+ 
+    @AfterClass
+    public void afterClass() {
+        driver.quit();
+    }
 }
